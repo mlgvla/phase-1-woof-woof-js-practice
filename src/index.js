@@ -1,15 +1,46 @@
 document.addEventListener("DOMContentLoaded", () => {
+  initFilterButton()
   getDogs()
 })
+
+function initFilterButton() {
+  let filterBtn = document.getElementById("good-dog-filter")
+  filterBtn.value = "false"
+  
+  filterBtn.addEventListener("click", () => {
+    if (filterBtn.value === "false") {
+      filterBtn.value = "true"
+      filterBtn.innerHTML = "Filter good dogs: ON"
+    } else {
+      filterBtn.value = "false"
+      filterBtn.innerHTML = "Filter good dogs: OFF"
+    }
+    getDogs()
+  })
+}
 
 function getDogs() {
   fetch("http://localhost:3000/pups")
     .then(r => r.json())
-    .then(dogs => addDogsToDogBar(dogs)) // add conditional here to call goodDogFilter
+    .then(dogs => filterDogs(dogs)) // add conditional here to call goodDogFilter
+}
+
+function filterDogs(dogs) {
+  let filterBtn = document.getElementById("good-dog-filter")
+  let filteredDogs = []
+
+  if (filterBtn.value === "true") {
+    filteredDogs = dogs.filter(dog => dog.isGoodDog)
+  } else {
+    filteredDogs = dogs
+  }
+
+  addDogsToDogBar(filteredDogs)
 }
 
 function addDogsToDogBar(dogs) {
   let dogBarDiv = document.getElementById("dog-bar")
+  dogBarDiv.innerHTML = ""
 
   dogs.forEach(dog => {
     let span = document.createElement("span")
@@ -17,7 +48,6 @@ function addDogsToDogBar(dogs) {
     span.id = dog.id
     span.addEventListener("click", event => {
       const dogId = event.target.id
-
       getDog(dogId)
     })
 
@@ -50,7 +80,6 @@ function showDogInfo(dog) {
 }
 
 function toggleGoodDog(dog) {
-  console.log("dog before change", dog.isGoodDog)
   dog.isGoodDog = !dog.isGoodDog
   updateDog(dog)
 }
