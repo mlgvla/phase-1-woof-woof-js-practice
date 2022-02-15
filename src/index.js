@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function initFilterButton() {
   let filterBtn = document.getElementById("good-dog-filter")
   filterBtn.value = "false"
-  
+
   filterBtn.addEventListener("click", () => {
     if (filterBtn.value === "false") {
       filterBtn.value = "true"
@@ -22,7 +22,7 @@ function initFilterButton() {
 function getDogs() {
   fetch("http://localhost:3000/pups")
     .then(r => r.json())
-    .then(dogs => filterDogs(dogs)) // add conditional here to call goodDogFilter
+    .then(dogs => filterDogs(dogs))
 }
 
 function filterDogs(dogs) {
